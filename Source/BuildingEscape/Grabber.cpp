@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Math/Rotator.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -31,12 +32,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	FVector Location;
-	FRotator Rotation;
-	PlayerController->GetPlayerViewPoint(Location, Rotation);
+	FVector PlayerLocation;
+	FRotator PlayerRotation;
+	PlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
 
-	UE_LOG(LogTemp, Warning, TEXT("Player position and rotation is %s and %s"),
-		*Location.ToString(), *Rotation.ToString());
+//	UE_LOG(LogTemp, Warning, TEXT("Player position and rotation is %s and %s"),
+//		*Location.ToString(), *Rotation.ToString());
 
+	FVector LineTraceEnd = PlayerLocation + (PlayerRotation.Vector() * Reach);
+
+	DrawDebugLine(
+		GetWorld(),
+		PlayerLocation,
+		LineTraceEnd,
+		FColor(255, 0, 0),
+		false,
+		.0f,
+		.0f,
+		10.0f
+	);
 }
 
