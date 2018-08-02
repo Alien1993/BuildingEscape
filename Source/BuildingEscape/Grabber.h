@@ -34,4 +34,13 @@ private:
 
 	void Grab();
 	void Release();
+	
+	/// Finds PhysicsHandleComponent attached to Owner
+	void FindPhysicsHandleComponent();
+
+	/// Finds and setup attached InputComponent to Owner
+	void SetupInputComponent();
+
+	/// Returns FHitResult with first PhysicsBody in reach
+	FHitResult GetFirstPhysicsBodyInReach() const;
 };
