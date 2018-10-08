@@ -20,18 +20,27 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Owner = GetOwner();
+	if (PressurePlate == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s missing PressurePlate"), *Owner->GetName());
+	}
 }
 
 void UOpenDoor::OpenDoor()
 {
-	Owner->SetActorRotation(FRotator{ .0f, OpenAngle, .0f });
+	if (Owner)
+	{
+		Owner->SetActorRotation(FRotator{ .0f, OpenAngle, .0f });
+	}
 }
 
 void UOpenDoor::CloseDoor()
 {
-	Owner->SetActorRotation(FRotator{ .0f, .0f, .0f });
+	if (Owner)
+	{
+		Owner->SetActorRotation(FRotator{ .0f, .0f, .0f });
+	}
 }
 
 float UOpenDoor::GetTotalMassOfActorsOnPlate() const
@@ -39,7 +48,10 @@ float UOpenDoor::GetTotalMassOfActorsOnPlate() const
 	float TotalMass = .0f;
 
 	TArray<AActor*> OverlappingActors;
-	PressurePlate->GetOverlappingActors(OverlappingActors);
+	if (PressurePlate != nullptr)
+	{
+		PressurePlate->GetOverlappingActors(OverlappingActors);
+	}
 
 	for (const auto* Actor : OverlappingActors)
 	{
