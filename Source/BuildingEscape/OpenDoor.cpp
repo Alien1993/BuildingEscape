@@ -20,26 +20,9 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	Owner = GetOwner();
 	if (PressurePlate == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s missing PressurePlate"), *Owner->GetName());
-	}
-}
-
-void UOpenDoor::OpenDoor()
-{
-	if (Owner)
-	{
-		Owner->SetActorRotation(FRotator{ .0f, OpenAngle, .0f });
-	}
-}
-
-void UOpenDoor::CloseDoor()
-{
-	if (Owner)
-	{
-		Owner->SetActorRotation(FRotator{ .0f, .0f, .0f });
+		UE_LOG(LogTemp, Error, TEXT("%s missing PressurePlate"), *GetOwner()->GetName());
 	}
 }
 
@@ -68,14 +51,11 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (GetTotalMassOfActorsOnPlate() > TriggerMass)
 	{
-		OpenDoor();
-		LastOpenDoorTime = GetWorld()->GetTimeSeconds();
+		OnOpenRequest.Broadcast();
 	}
-
-	float Delta = GetWorld()->GetTimeSeconds() - LastOpenDoorTime;
-	if (Delta > CloseDelay)
+	else
 	{
-		CloseDoor();
+		OnCloseRequest.Broadcast();
 	}
 }
 
